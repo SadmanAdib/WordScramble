@@ -17,13 +17,17 @@ struct ContentView: View {
     @State private var errorMessage = ""
     @State private var showingError = false
     
+    @State private var score = 0
+    
     var body: some View {
             NavigationView{
             List{
-                Section{
-                    TextField("Enter your word", text:$newWord).autocapitalization(.none)
+                VStack{
+                    Section{
+                        TextField("Enter your word", text:$newWord).autocapitalization(.none)
+                    }
+                    Text("Score : \(score)")
                 }
-                
                 Section{
                     ForEach(usedWords, id:\.self){ word in
                         HStack{
@@ -94,6 +98,7 @@ struct ContentView: View {
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
                 usedWords.removeAll()
+                score = 0
                 return
             }
         }
@@ -126,6 +131,8 @@ struct ContentView: View {
         withAnimation{
             usedWords.insert(answer, at:0)
         }
+        
+        score += usedWords[0].count
        
         newWord=""
     }
