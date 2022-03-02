@@ -34,6 +34,9 @@ struct ContentView: View {
                     }
                 }
             }.navigationTitle(rootWord)
+                    .toolbar {
+                        Button("Restart", action: startGame)
+                    }
             }
             .onSubmit {
                 addNewWord()
@@ -90,7 +93,7 @@ struct ContentView: View {
             if let startWords = try? String(contentsOf: startWordsURL){
                 let allWords = startWords.components(separatedBy: "\n")
                 rootWord = allWords.randomElement() ?? "silkworm"
-                
+                usedWords.removeAll()
                 return
             }
         }
