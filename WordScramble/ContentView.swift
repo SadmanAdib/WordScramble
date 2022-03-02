@@ -13,6 +13,10 @@ struct ContentView: View {
     @State private var usedWords = [String] ()
     @State private var rootWord = ""
     
+    @State private var errorTitle = ""
+    @State private var errorMessage = ""
+    @State private var showingError = false
+    
     var body: some View {
             NavigationView{
             List{
@@ -35,6 +39,17 @@ struct ContentView: View {
                 addNewWord()
             }
             .onAppear(perform: startGame)
+            .alert(errorTitle, isPresented: $showingError) {
+                Button("OK", role: .cancel){}
+            }message: {
+                Text(errorMessage)
+            }
+    }
+    
+    func wordError(title: String, message: String) {
+        errorTitle = title
+        errorMessage = message
+        showingError = true
     }
     
     func isReal(word: String) -> Bool {
@@ -78,6 +93,19 @@ struct ContentView: View {
     func addNewWord() {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         guard answer.count > 0 else {return}
+        
+        guard isOriginal(word: answer) else {
+            wordError(title: "Word already used", message: "Be more original")
+            return
+        }
+        guard isPossible(word: answer) else {
+            wordError(title: "Word not possible", message: "You cannot spell that from '\(rootWord)'!")
+            return
+        }
+        guard isReal(word: answer) else {
+            wordError(title: "Word not recognized", message: "You cannot just make them up")
+            return
+        }
         withAnimation{
             usedWords.insert(answer, at:0)
         }
