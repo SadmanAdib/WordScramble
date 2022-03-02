@@ -46,6 +46,14 @@ struct ContentView: View {
             }
     }
     
+    func isLongerThanThree(word: String) -> Bool {
+        return word.count >= 3
+    }
+    
+    func isDifferent(word: String) -> Bool {
+        return !(word == rootWord) 
+    }
+    
     func wordError(title: String, message: String) {
         errorTitle = title
         errorMessage = message
@@ -95,15 +103,21 @@ struct ContentView: View {
         guard answer.count > 0 else {return}
         
         guard isOriginal(word: answer) else {
-            wordError(title: "Word already used", message: "Be more original")
+            wordError(title: "Word already used", message: "Try another one!")
             return
         }
-        guard isPossible(word: answer) else {
-            wordError(title: "Word not possible", message: "You cannot spell that from '\(rootWord)'!")
+        if answer.count >= 3{
+            guard isReal(word: answer) else {
+                wordError(title: "Word not recognized", message: "You cannot just make them up")
+                return
+            }
+        }
+        guard isLongerThanThree(word: answer) else {
+            wordError(title: "Length too short", message: "Try words having more 2 letters")
             return
         }
-        guard isReal(word: answer) else {
-            wordError(title: "Word not recognized", message: "You cannot just make them up")
+        guard isDifferent(word: answer) else {
+            wordError(title: "Same Words!", message: "Try something new other than the original one")
             return
         }
         withAnimation{
