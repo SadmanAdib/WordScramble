@@ -22,12 +22,9 @@ struct ContentView: View {
     var body: some View {
             NavigationView{
             List{
-                VStack{
                     Section{
                         TextField("Enter your word", text:$newWord).autocapitalization(.none)
                     }
-                    Text("Score : \(score)")
-                }
                 Section{
                     ForEach(usedWords, id:\.self){ word in
                         HStack{
@@ -50,6 +47,12 @@ struct ContentView: View {
                 Button("OK", role: .cancel){}
             }message: {
                 Text(errorMessage)
+            }
+            .safeAreaInset(edge: .bottom) {
+                Text("Score: \(score)")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .font(.title)
             }
     }
     
